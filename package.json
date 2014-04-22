@@ -29,9 +29,6 @@
       "port": 53000,
       "cache": false
     },
-    "socketio": {
-      "port": 53001
-    },
     "redis": {
       "host": "127.0.0.1",
       "port": 6379,
@@ -48,7 +45,7 @@
     "mongodb": {
       "host": "127.0.0.1",
       "port": 27017,
-      "base": "tinel",
+      "base": "PROJECT_DB",
       "log": false
     }
   },
