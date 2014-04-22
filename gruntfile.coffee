@@ -103,3 +103,43 @@ module.exports = ( grunt ) ->
         # static (TODO)
         "bumpup:prerelease"
     ]
+
+    grunt.registerTask "work", [
+        "default"
+        "concurrent"
+    ]
+
+    grunt.registerTask "lint", [
+        "clear"
+        "coffeelint:server"
+        # client
+        # css
+    ]
+
+    grunt.registerTask "patch", [
+        "clear"
+        # server
+        "clean:server"
+        "coffeelint:server"
+        "coffee:server"
+        "copy:server"
+        # client (TODO)
+        # static (TODO)
+        "bumpup:patch"
+        "bumpup:prerelease"
+        "bumpup:prerelease"
+    ]
+
+    grunt.registerTask "minor", [
+        "clear"
+        # server
+        "clean:server"
+        "coffeelint:server"
+        "coffee:server"
+        "copy:server"
+        # client (TODO)
+        # static (TODO)
+        "bumpup:minor"
+        "bumpup:prerelease"
+        "bumpup:prerelease"
+    ]
