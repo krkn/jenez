@@ -11,8 +11,8 @@
 
 root = "#{ __dirname }/../../.."
 
-tools = require "#{ root }/core/tools.js"
+zouti = require "zouti"
 
 exports.log = ( oRequest, oResponse, fNext ) ->
-    tools.log "(#{ oRequest.method }) #{ oRequest.url }", "express"
+    zouti.log "(#{ oRequest.method }) #{ oRequest.url }", "express"
     fNext()
