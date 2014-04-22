@@ -1,0 +1,51 @@
+{
+    "folders":
+    [
+        {
+            "file_exclude_patterns": [
+                ".gitignore",
+                "*.sublime-workspace",
+                "*.orig"
+            ],
+            "folder_exclude_patterns": [
+                ".vagrant",
+                "node_modules",
+                "bin",
+                "docs",
+                "test",
+                "src",
+                "static",
+                "_gfx"
+            ],
+            "name": "PROJECT_NAME",
+            "path": "."
+        },
+        {
+            "name": "Server",
+            "path": "./src",
+            "file_exclude_patterns": [
+                "*.orig"
+            ]
+        },
+        {
+            "name": "Client",
+            "path": "./static",
+            "file_exclude_patterns": [
+                "*.js",
+                "*.orig"
+            ],
+            "folder_exclude_patterns": [
+                "old-stylus",
+                ".sass-cache",
+                "js"
+            ]
+        }
+    ],
+    "settings": {
+        "ensure_newline_at_eof_on_save": true,
+        "tab_size": 4,
+        "translate_tabs_to_spaces": true,
+        "trim_automatic_white_space": true,
+        "trim_trailing_white_space_on_save": true
+    }
+}
