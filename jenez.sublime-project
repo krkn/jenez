@@ -22,22 +22,26 @@
         },
         {
             "name": "Server",
-            "path": "./src",
+            "path": "./src/server",
             "file_exclude_patterns": [
                 "*.orig"
             ]
         },
         {
             "name": "Client",
+            "path": "./src/client",
+            "file_exclude_patterns": [
+                "*.orig"
+            ]
+        },
+        {
+            "name": "Static",
             "path": "./static",
             "file_exclude_patterns": [
-                "*.js",
                 "*.orig"
             ],
             "folder_exclude_patterns": [
-                "old-stylus",
-                ".sass-cache",
-                "js"
+                ".sass-cache"
             ]
         }
     ],
