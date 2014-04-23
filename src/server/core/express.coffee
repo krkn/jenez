@@ -42,6 +42,9 @@ app.use session
 # Configure logging middleware
 app.use middlewares.log
 
+# Configure static middleware (from package.json, usualy handled by nginx)
+app.use express.static "#{ root }/../../static" if pkg.config.express.static
+
 # Configure the template engine
 app.set "views", "#{ root }/views"
 app.set "view engine", "jade"

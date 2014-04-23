@@ -24,7 +24,8 @@
     "log_level": 4,
     "express": {
       "port": 53000,
-      "cache": false
+      "cache": false,
+      "static": true
     },
     "redis": {
       "host": "127.0.0.1",
