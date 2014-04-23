@@ -1,0 +1,17 @@
+/* SITE */
+Last update: 2014/01/30
+Standards: html5 & css3
+Components: stylus, coffeescript/vanilla, node.js
+
+/* TEAM */
+Dev: Pierre-Antoine 'Leny' Delnatte
+Company: KRKN
+Site: http://krkn.be
+Twitter: @leny_be
+Location: Liège, Belgium.
+
+Dev: Thierry 'Akarun' Lagasse
+Company: KRKN
+Site: http://krkn.be
+Twitter: @akarun
+Location: Liège, Belgium.
