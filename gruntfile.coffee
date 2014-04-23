@@ -56,6 +56,40 @@ module.exports = ( grunt ) ->
                     src: [ "**/*.jade" ]
                     dest: "bin/server/views/"
                 ]
+        stylus:
+            options:
+                compress: no
+            static:
+                files:
+                    "static/css/styles.css": "static/stylus/styles.styl"
+        csslint:
+            options:
+                "box-model": no
+                "non-link-hover": no
+                "adjoining-classes": no
+                "box-sizing": no
+                "compatible-vendor-prefixes": no
+                "gradients": no
+                "text-indent": no
+                "fallback-colors": no
+                "font-faces": no
+                "universal-selector": no
+                "unqualified-attributes": no
+                "overqualified-elements": no
+                "floats": no
+                "font-sizes": no
+                "ids": no
+                "important": no
+                "outline-none": no
+                "qualified-headings": no
+                "unique-headings": no
+                "duplicate-background-images": no
+            static:
+                src: [ "static/css/styles.css" ]
+        csso:
+            static:
+                files:
+                    "static/css/styles.min.css": "static/css/styles.css"
         supervisor:
             server:
                 script: "bin/server/index.js"
@@ -77,11 +111,24 @@ module.exports = ( grunt ) ->
                     "newer:copy:server"
                     "bumpup:prerelease"
                 ]
+            static:
+                files: [
+                    "static/stylus/**/*.styl"
+                ]
+                options:
+                    nospawn: yes
+                tasks: [
+                    "clear"
+                    "stylus:static"
+                    "csslint:static"
+                    "csso:static"
+                    "bumpup:prerelease"
+                ]
         concurrent:
             work:
                 tasks: [
                     "supervisor:server"
-                    "watch:server"
+                    "watch"
                 ]
                 options:
                     logConcurrentOutput: yes
@@ -100,7 +147,11 @@ module.exports = ( grunt ) ->
         "coffee:server"
         "copy:server"
         # client (TODO)
-        # static (TODO)
+        # static
+        "stylus:static"
+        "csslint:static"
+        "csso:static"
+        # bump
         "bumpup:prerelease"
     ]
 
@@ -113,7 +164,9 @@ module.exports = ( grunt ) ->
         "clear"
         "coffeelint:server"
         # client
-        # css
+        "stylus:static"
+        "csslint:static"
+        "csso:static"
     ]
 
     grunt.registerTask "patch", [
@@ -124,7 +177,11 @@ module.exports = ( grunt ) ->
         "coffee:server"
         "copy:server"
         # client (TODO)
-        # static (TODO)
+        # static
+        "stylus:static"
+        "csslint:static"
+        "csso:static"
+        # bump
         "bumpup:patch"
         "bumpup:prerelease"
         "bumpup:prerelease"
@@ -138,7 +195,11 @@ module.exports = ( grunt ) ->
         "coffee:server"
         "copy:server"
         # client (TODO)
-        # static (TODO)
+        # static
+        "stylus:static"
+        "csslint:static"
+        "csso:static"
+        # bump
         "bumpup:minor"
         "bumpup:prerelease"
         "bumpup:prerelease"

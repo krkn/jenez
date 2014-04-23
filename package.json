@@ -45,7 +45,10 @@
     "matchdep": "~0.3.0",
     "grunt-bumpup": "~0.5.2",
     "grunt-contrib-watch": "~0.6.1",
-    "grunt": "~0.4.4"
+    "grunt": "~0.4.4",
+    "grunt-contrib-stylus": "^0.14.0",
+    "grunt-contrib-csslint": "^0.2.0",
+    "grunt-csso": "^0.6.1"
   },
   "dependencies": {
     "connect-redis": "~2.0.0",
