@@ -1,10 +1,8 @@
 # Jenèz
 
-Base structure for KRKN projects.
+Base structure for **krkn** `node.js` projects.
 
+* * *
 
-
-## License
-
-2014 [krkn](http://krkn.be)
-(Un)Licensed.
+2014 [krkn](http://krkn.be)  
+(Un)Licensed. Feel free to fork and use as base for your own projects.
