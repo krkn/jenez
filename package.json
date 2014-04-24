@@ -16,7 +16,7 @@
     "type": "git",
     "url": "PROJECT_REPOSITORY"
   },
-  "main": "bin/PROJECT_NAME",
+  "main": "bin/server/index.js",
   "engines": {
     "node": ">= 0.10.0"
   },

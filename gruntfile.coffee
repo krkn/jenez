@@ -154,6 +154,7 @@ module.exports = ( grunt ) ->
                 ]
                 options:
                     nospawn: yes
+                    livereload: yes
                 tasks: [
                     "clear"
                     "newer:coffeelint:client"
@@ -168,6 +169,7 @@ module.exports = ( grunt ) ->
                 ]
                 options:
                     nospawn: yes
+                    livereload: yes
                 tasks: [
                     "clear"
                     "stylus:styles"

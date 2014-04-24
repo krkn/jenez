@@ -12,4 +12,3 @@
 module.exports =
     world: ->
         console.log "Hello, world !"
-
