@@ -13,6 +13,7 @@ module.exports = ( grunt ) ->
         bumpup: "package.json"
         clean:
             server: [ "bin/server/" ]
+            client: [ "bin/client/" ]
         coffeelint:
             options:
                 arrow_spacing:
@@ -44,12 +45,23 @@ module.exports = ( grunt ) ->
             server:
                 files:
                     src: [ "src/server/**/*.coffee" ]
+            client:
+                files:
+                    src: [ "src/client/**/*.coffee" ]
         coffee:
             server:
                 expand: yes
                 cwd: "src/server/"
                 src: [ "**/*.coffee" ]
                 dest: "bin/server/"
+                ext: ".js"
+                options:
+                    bare: yes
+            client:
+                expand: yes
+                cwd: "src/client/"
+                src: [ "**/*.coffee" ]
+                dest: "bin/client/"
                 ext: ".js"
                 options:
                     bare: yes
@@ -61,10 +73,30 @@ module.exports = ( grunt ) ->
                     src: [ "**/*.jade" ]
                     dest: "bin/server/views/"
                 ]
+        browserify:
+            libs:
+                options:
+                    require: aBrowserifyLibs
+                src: []
+                dest: "static/js/libs.js"
+            client:
+                options:
+                    external: aBrowserifyLibs
+                files:
+                    "static/js/app.js": "bin/client/app.js"
+        uglify:
+            options:
+                sourceMap: yes # should be removed for production
+            libs:
+                files:
+                    "static/js/libs.min.js": "static/js/libs.js"
+            client:
+                files:
+                    "static/js/app.min.js": "static/js/app.js"
         stylus:
             options:
                 compress: no
-            static:
+            styles:
                 files:
                     "static/css/styles.css": "static/stylus/styles.styl"
         csslint:
@@ -89,24 +121,12 @@ module.exports = ( grunt ) ->
                 "qualified-headings": no
                 "unique-headings": no
                 "duplicate-background-images": no
-            static:
+            styles:
                 src: [ "static/css/styles.css" ]
         csso:
-            static:
+            styles:
                 files:
                     "static/css/styles.min.css": "static/css/styles.css"
-        browserify:
-            libs:
-                options:
-                    require: aBrowserifyLibs
-                src: []
-                dest: "static/js/libs.js"
-        uglify:
-            options:
-                sourceMap: yes # should be removed for production
-            libs:
-                files:
-                    "static/js/libs.min.js": "static/js/libs.js"
         supervisor:
             server:
                 script: "bin/server/index.js"
@@ -128,7 +148,21 @@ module.exports = ( grunt ) ->
                     "newer:copy:server"
                     "bumpup:prerelease"
                 ]
-            static:
+            client:
+                files: [
+                    "src/client/**/*.coffee"
+                ]
+                options:
+                    nospawn: yes
+                tasks: [
+                    "clear"
+                    "newer:coffeelint:client"
+                    "newer:coffee:client"
+                    "browserify:client"
+                    "uglify:client"
+                    "bumpup:prerelease"
+                ]
+            styles:
                 files: [
                     "static/stylus/**/*.styl"
                 ]
@@ -136,9 +170,9 @@ module.exports = ( grunt ) ->
                     nospawn: yes
                 tasks: [
                     "clear"
-                    "stylus:static"
-                    "csslint:static"
-                    "csso:static"
+                    "stylus:styles"
+                    "csslint:styles"
+                    "csso:styles"
                     "bumpup:prerelease"
                 ]
         concurrent:
@@ -164,12 +198,15 @@ module.exports = ( grunt ) ->
         "coffee:server"
         "copy:server"
         # client
+        "clean:client"
+        "coffeelint:client"
+        "coffee:client"
         "browserify"
         "uglify"
         # static
-        "stylus:static"
-        "csslint:static"
-        "csso:static"
+        "stylus:styles"
+        "csslint:styles"
+        "csso:styles"
         # bump
         "bumpup:prerelease"
     ]
@@ -182,10 +219,10 @@ module.exports = ( grunt ) ->
     grunt.registerTask "lint", [
         "clear"
         "coffeelint:server"
-        # client (TODO)
-        "stylus:static"
-        "csslint:static"
-        "csso:static"
+        "coffeelint:client"
+        "stylus:styles"
+        "csslint:styles"
+        "csso:styles"
     ]
 
     grunt.registerTask "patch", [
@@ -196,12 +233,15 @@ module.exports = ( grunt ) ->
         "coffee:server"
         "copy:server"
         # client
+        "clean:client"
+        "coffeelint:client"
+        "coffee:client"
         "browserify"
         "uglify"
         # static
-        "stylus:static"
-        "csslint:static"
-        "csso:static"
+        "stylus:styles"
+        "csslint:styles"
+        "csso:styles"
         # bump
         "bumpup:patch"
         "bumpup:prerelease"
@@ -216,12 +256,15 @@ module.exports = ( grunt ) ->
         "coffee:server"
         "copy:server"
         # client
+        "clean:client"
+        "coffeelint:client"
+        "coffee:client"
         "browserify"
         "uglify"
         # static
-        "stylus:static"
-        "csslint:static"
-        "csso:static"
+        "stylus:styles"
+        "csslint:styles"
+        "csso:styles"
         # bump
         "bumpup:minor"
         "bumpup:prerelease"
