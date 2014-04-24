@@ -4,6 +4,11 @@ module.exports = ( grunt ) ->
 
     require( "matchdep" ).filterDev( "grunt-*" ).forEach grunt.loadNpmTasks
 
+    aBrowserifyLibs = [
+        "jquery"
+        # complete with included client-side libs, such as backbone, socket.io, ...
+    ]
+
     grunt.initConfig
         bumpup: "package.json"
         clean:
@@ -90,6 +95,18 @@ module.exports = ( grunt ) ->
             static:
                 files:
                     "static/css/styles.min.css": "static/css/styles.css"
+        browserify:
+            libs:
+                options:
+                    require: aBrowserifyLibs
+                src: []
+                dest: "static/js/libs.js"
+        uglify:
+            options:
+                sourceMap: yes # should be removed for production
+            libs:
+                files:
+                    "static/js/libs.min.js": "static/js/libs.js"
         supervisor:
             server:
                 script: "bin/server/index.js"
@@ -146,7 +163,9 @@ module.exports = ( grunt ) ->
         "coffeelint:server"
         "coffee:server"
         "copy:server"
-        # client (TODO)
+        # client
+        "browserify"
+        "uglify"
         # static
         "stylus:static"
         "csslint:static"
@@ -163,7 +182,7 @@ module.exports = ( grunt ) ->
     grunt.registerTask "lint", [
         "clear"
         "coffeelint:server"
-        # client
+        # client (TODO)
         "stylus:static"
         "csslint:static"
         "csso:static"
@@ -176,7 +195,9 @@ module.exports = ( grunt ) ->
         "coffeelint:server"
         "coffee:server"
         "copy:server"
-        # client (TODO)
+        # client
+        "browserify"
+        "uglify"
         # static
         "stylus:static"
         "csslint:static"
@@ -194,7 +215,9 @@ module.exports = ( grunt ) ->
         "coffeelint:server"
         "coffee:server"
         "copy:server"
-        # client (TODO)
+        # client
+        "browserify"
+        "uglify"
         # static
         "stylus:static"
         "csslint:static"

@@ -6,4 +6,5 @@ node_modules
 .vagrant/machines
 bin
 
+static/js/*
 static/css/*
