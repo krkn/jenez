@@ -1,5 +1,5 @@
 ###
- * PROJECT NAME
+ * PROJECT_NAME
  *
  * ~/modules/hello.js - Random client module
  *

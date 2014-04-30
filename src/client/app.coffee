@@ -1,5 +1,5 @@
 ###
- * PROJECT NAME
+ * PROJECT_NAME
  *
  * ~/app.js - Client entry point
  *

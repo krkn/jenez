@@ -1,5 +1,5 @@
 ###
- * PROJECT NAME
+ * PROJECT_NAME
  *
  * /index.js - Main entry point
  *

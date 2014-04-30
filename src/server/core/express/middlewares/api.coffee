@@ -1,5 +1,5 @@
 ###
- * PROJECT NAME
+ * PROJECT_NAME
  *
  * /core/express/middlewares/api.js - api middleware
  *

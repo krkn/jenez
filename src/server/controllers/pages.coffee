@@ -1,5 +1,5 @@
 ###
- * PROJECT NAME
+ * PROJECT_NAME
  *
  * /controllers/pages.js - Controller for common pages
  *
