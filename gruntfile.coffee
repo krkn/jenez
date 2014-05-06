@@ -105,22 +105,20 @@ module.exports = ( grunt ) ->
                 "non-link-hover": no
                 "adjoining-classes": no
                 "box-sizing": no
-                "compatible-vendor-prefixes": no
-                "gradients": no
                 "text-indent": no
-                "fallback-colors": no
+                "fallback-colors": no # until stylus-lakansyel is completed
                 "font-faces": no
+                "regex-selectors": no
                 "universal-selector": no
                 "unqualified-attributes": no
                 "overqualified-elements": no
+                "duplicate-background-images": no
                 "floats": no
                 "font-sizes": no
-                "ids": no
-                "important": no
                 "outline-none": no
                 "qualified-headings": no
                 "unique-headings": no
-                "duplicate-background-images": no
+                "compatible-vendor-prefixes": no
             styles:
                 src: [ "static/css/styles.css" ]
         csso:
