@@ -27,11 +27,12 @@ function process_end {
     exit 0
 }
 
+
 # =============================================================================
 
 # Update
-echo -en "${SEP}Updating"
-#apt-get -yq update >/dev/null 2>&1 && 
+echo -en "${SEP}System Update"
+apt-get -yq update >/dev/null 2>&1 && 
 #apt-get -yq upgrade >/dev/null 2>&1 &&
 echo_success || process_end 1 "Unable to update the system"
 
@@ -39,23 +40,39 @@ echo_success || process_end 1 "Unable to update the system"
 echo "SELINUX=disabled" >> /etc/selinux/config
 
 # Tools
-echo -en "${SEP}Install Tools"
+echo -en "${SEP}Install Tools\n"
 
-test $(which vim) || apt-get install -yq vim >/dev/null 2>&1 
-test $(which nano) || apt-get install -yq nano >/dev/null 2>&1 
-test $(which apg) || apt-get install -yq apg >/dev/null 2>&1 
-test $(which zip) || apt-get install -yq zip unzip >/dev/null 2>&1 
-test $(which git) || apt-get install -yq git >/dev/null 2>&1 
-test $(which curl) || apt-get install -yq curl >/dev/null 2>&1 
-test $(which bzip2) || apt-get install -yq bzip2 >/dev/null 2>&1 
-echo_exists
+# ... Does'nt work
+# echo -en "Apt"
+# apt-get install -yq software-properties-common >/dev/null 2>&1 && echo_success || echo_warning
+
+echo -en "\tVim"
+test $(which vim) && echo_exists || ( apt-get install -yq vim >/dev/null 2>&1 && echo_success || echo_failure )
+
+# echo -en "\tNano"
+# test $(which nano) && echo_exists || ( apt-get install -yq nano >/dev/null 2>&1 && echo_success || echo_failure )
+
+echo -en "\tApg"
+test $(which apg) && echo_exists || ( apt-get install -yq apg >/dev/null 2>&1 && echo_success || echo_failure )
+
+echo -en "\tZip"
+test $(which zip) && echo_exists || ( apt-get install -yq zip unzip >/dev/null 2>&1 && echo_success || echo_failure )
+
+echo -en "\tGit" 
+test $(which git) && echo_exists || ( apt-get install -yq git >/dev/null 2>&1 && echo_success || echo_failure )
+
+# echo -en "\tCurl"
+# test $(which curl) && echo_exists || ( apt-get install -yq curl >/dev/null 2>&1 && echo_success || echo_failure )
+
+# echo -en "\tBZip2"
+# test $(which bzip2) && echo_exists || ( apt-get install -yq bzip2 >/dev/null 2>&1 && echo_success || echo_failure )
 
 # -----------------------------------------------------------------------------
 
 # Prompt and aliases
 echo -en "\nPrompt and aliases"
 
-grep -q 'alias duh' /root/.bashrc || tee -a /root/.bashrc <<EOF
+grep -q 'alias duh' /root/.bashrc || tee -a /root/.bashrc >/dev/null <<EOF
 # Prompt
 export PS1="\n\[\033[1;34m\][\u@\h \#|\W]\n\[$(tput bold)\]↪\[\033[0m\] "
 # Use colors
@@ -87,23 +104,46 @@ set viminfo=\'20,\"50
 set history=50
 set ruler
 EOF
-echo_exists
+echo_success
 
+# -----------------------------------------------------------------------------
+
+# Avahi (in case of...)
+echo -en "\nInstall Avahi Deamon"
+
+apt-get install -qy avahi-daemon >/dev/null 2>&1 &&
+update-rc.d avahi-daemon defaults >/dev/null 2>&1 &&
+
+tee -a /etc/avahi/services/afpd.service >/dev/null <<EOF
+<?xml version="1.0" standalone='no'?><!--*-nxml-*-->
+<!DOCTYPE service-group SYSTEM "avahi-service.dtd">
+<service-group>
+    <name replace-wildcards="yes">%h</name>
+    <service>
+        <type>_afpovertcp._tcp</type>
+        <port>548</port>
+    </service>
+</service-group>
+EOF
+
+/etc/init.d/avahi-daemon restart > /dev/null 2>&1 && echo_success || echo_failure
 
 # -----------------------------------------------------------------------------
 
 # Mongo DB
-echo -en "\nInstall Tools"
+echo -en "\nInstall MongoDB"
 
 if [[ -z $(which mongo) ]]; then
-    apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10 &&
-    echo 'deb http://downloads-distro.mongodb.org/repo/debian-sysvinit dist 10gen' | tee /etc/apt/sources.list.d/mongodb.list &&
-    apt-get -yq update >/dev/null 2>&1 && apt-get install -qy mongodb-org >/dev/null 2>&1
+    apt-key adv -q --keyserver keyserver.ubuntu.com --recv 7F0CEB10 >/dev/null 2>&1 &&
+    echo 'deb http://downloads-distro.mongodb.org/repo/debian-sysvinit dist 10gen' | tee -a /etc/apt/sources.list.d/mongodb.list >/dev/null &&
+    apt-get -yq update >/dev/null 2>&1 && 
+    apt-get install -qy mongodb-org >/dev/null 2>&1
     
-    if ( $? ); then 
-        process_end 1 "Unable to install MongoDB"
+    if [[ -z $(which mongo) ]]; then 
+        echo_failure
     else
-        mongo admin --eval "db.addUser( { user: \"admin\", pwd: \"admin\", roles: [ \"userAdmin\" ] } )" &&
+        /etc/init.d/mongod start && 
+        mongo admin --eval "db.createUser( { user: \"admin\", pwd: \"admin\", roles: [ \"userAdmin\" ] } )" &&
         echo_success || echo_warning
     fi
 else
@@ -118,97 +158,90 @@ echo -en "\nInstall Redis"
 if [[ -z $(which redis-cli) ]]; then
     apt-get install -qy redis-server >/dev/null 2>&1
 
-    if ( $? ); then 
+    if [[ -z $(which redis-cli) ]]; then
         process_end 1 "Unable to install Redis"
     else
-        REDIS_PONG=$(redis-cli ping)
-
-        if [[ $REDIS_PONG != "PONG" ]]; then 
-            echo_warning; 
-        else 
-            echo_success; 
-        fi
+        [[ $(redis-cli ping) != "PONG" ]] && echo_warning || echo_success
     fi
 else
     echo_exists
 fi
 
+process_end
+
 # -----------------------------------------------------------------------------
 
 # Node
-# echo -en "\nInstall Node"
+echo -en "\nInstall Node"
 
-# add-apt-repository ppa:chris-lea/node.js
-# apt-get -yq update && apt-get install -qy nodejs
+add-apt-repository ppa:chris-lea/node.js >/dev/null &&
+apt-get -yq update >/dev/null && apt-get install -qy nodejs >/dev/null
 
-# if ( $? ); then 
-#     process_end 1 "Unable to install Node"
-# else
-#     npm install -g n --unsafe-perm
-#     n stable
-
-#     echo_success
-# fi
+if ( $? ); then 
+    process_end 1 "Unable to install Node"
+else
+    npm install -g n --unsafe-perm
+    n stable && echo_success || echo_failure
+fi
 
 # NPM Pack
-# echo -en "\nInstall NPM packages"
+echo -en "\nInstall NPM packages"
 
-# npm install -g grunt-cli --unsafe-perm
-# npm install -g nodemon --unsafe-perm
-# npm install -g bower --unsafe-perm
-# npm install -g browserify --unsafe-perm
-
-# echo_exists
+npm install -g grunt-cli --unsafe-perm
+npm install -g nodemon --unsafe-perm
+npm install -g bower --unsafe-perm
+npm install -g browserify --unsafe-perm
+echo_exists
 
 # -----------------------------------------------------------------------------
 
 # NginX
-# echo -en "\nInstall NginX"
+echo -en "\nInstall NginX"
 
-# if [ -f /etc/nginx/nginx.conf ]; then
-#     apt-get install -yq nginx-extra
-#     sed -i 's/user www-data/user vagrant/' /etc/nginx/nginx.conf
+if [[ -f /etc/nginx/nginx.conf ]]; then
+    apt-get install -yq nginx-extra
+    sed -i 's/user www-data/user vagrant/' /etc/nginx/nginx.conf
 
-#     service nginx restart
-#     if ( $? ); then 
-#         process_end 1 "Unable to install NginX"
-#     else 
-#         echo_success; 
-#     fi
-# else
-#     echo_exists
-# fi
+    service nginx restart
+    if ( $? ); then 
+        process_end 1 "Unable to install NginX"
+    else 
+        echo_success; 
+    fi
 
-# VHosts
+    # NginX Config
+    echo -en "\tConfiguration"
+    #sed -e "/^\"syntax/s/^\"//" -i /etc/nginx/
+    echo_success
+else
+    echo_exists
+fi
 
+# NginX VHost
+echo -en "\tVHost installation"
+if [[ -f /etc/nginx/site-availables/default ]]; then
+    if [[ -f ./vhost.skel]]; then 
+        mv /etc/nginx/site-availables/default /etc/nginx/site-availables/default.bakup
+        cp vhost.skel /etc/nginx/site-availables/default
 
-# =============================================================================
+        #TODO: change vHost parameters
 
-# Avahi (in case of...)
-# apt-get install -qy avahi-daemon
-# update-rc.d avahi-daemon defaults
-
-# sudo tee -a /etc/avahi/services/afpd.service <<EOF
-# <?xml version="1.0" standalone='no'?><!--*-nxml-*-->
-# <!DOCTYPE service-group SYSTEM "avahi-service.dtd">
-# <service-group>
-#     <name replace-wildcards="yes">%h</name>
-#     <service>
-#         <type>_afpovertcp._tcp</type>
-#         <port>548</port>
-#     </service>
-# </service-group>
-# EOF
-
-# /etc/init.d/avahi-daemon restart
+        /etc/init.d/nginx configtest && /etc/init.d/nginx restart &&
+        echo_success || echo_failure
+    else
+        echo_warning ; echo -en "\t\tNo vhost template..."
+    fi
+else
+    echo_exists
+fi
 
 # =============================================================================
 
 # Project
-# echo -en "\nDeploy project sources"
-# cd /vagrant
-# rm -rf node_modules
-# npm install --unsafe-perm
+echo -en "\nDeploy project sources"
+cd /vagrant
+rm -rf node_modules
+npm install --unsafe-perm
 
 # =============================================================================
 
