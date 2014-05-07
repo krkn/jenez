@@ -18,7 +18,7 @@ Vagrant.configure("2") do |config|
 
     config.vm.hostname = host
     config.vm.network :private_network, ip: ip
-    config.vm.network :public_network, :bridge => "en0: Ethernet"
+    #config.vm.network :public_network, :bridge => "en0: Ethernet"
     config.vm.network :forwarded_port, guest: 27017, host: 27017
     config.vm.network :forwarded_port, guest: 6379, host: 6379
 
