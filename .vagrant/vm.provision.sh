@@ -200,7 +200,7 @@ fi
 # -----------------------------------------------------------------------------
 
 # NginX
-echo -en "\nInstall NginX\t"
+echo -en "Install NginX\t"
 
 if [[ ! -f /etc/nginx/nginx.conf ]]; then
     apt-get install -y nginx-extras >/dev/null 2>&1
