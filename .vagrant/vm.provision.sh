@@ -9,6 +9,7 @@
 START_TIME=$SECONDS
 PROJECT_NAME=$1
 PROJECT_HOST=$2
+PROJECT_FILE=$(echo "${PROJECT_NAME,,}" |  sed -e 's/ /_/g')
 
 # =============================================================================
 SEP="$(printf '%0.1s' "-"{1..80})\n"
@@ -265,6 +266,19 @@ pushd /vagrant >/dev/null &&
 rm -rf node_modules &&
 npm install --unsafe-perm >/dev/null 2>&1 &&
 echo_success || echo_failure
+
+if [ -n $PROJECT_NAME ]; then
+    [ -f package.json ] && sed -e "s/PROJECT_NAME/${PROJECT_NAME}/" -i package.json
+
+    if [ -f jenez.sublime-project ]; then
+        sed -e "s/PROJECT_NAME/${PROJECT_NAME}/" -i jenez.sublime-project
+        mv jenez.sublime-project "${PROJECT_FILE}.sublime-project"
+    fi
+
+    find ./src -type f -name "*.coffee" -print0 | xargs -0 sed -i "s/PROJECT_NAME/${PROJECT_NAME}/"
+    find ./static -type f -name "*.styl" -print0 | xargs -0 sed -i "s/PROJECT_NAME/${PROJECT_NAME}/"
+fi
+
 
 # =============================================================================
 
