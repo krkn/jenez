@@ -1,6 +1,6 @@
 {
   "name": "PROJECT_NAME",
-  "version": "0.0.0-0",
+  "version": "0.0.0-2",
   "description": "PROJECT_DESCRIPTION",
   "private": true,
   "author": {
@@ -50,7 +50,7 @@
     "grunt-contrib-stylus": "^0.14.0",
     "grunt-contrib-csslint": "^0.2.0",
     "grunt-csso": "^0.6.1",
-    "browserify": "^3.44.2",
+    "browserify": "^4.0.0",
     "grunt-browserify": "^2.0.8",
     "grunt-contrib-uglify": "^0.4.0"
   },
