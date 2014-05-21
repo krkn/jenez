@@ -6,7 +6,7 @@
 #
 #  ============================================================================
 
-# Configuration 
+# Configuration
 name = 'project_name'   # VM name
 host = 'project.local'  # Web access
 ip = '10.0.0.6'         # IP for private network
@@ -14,7 +14,7 @@ ip = '10.0.0.6'         # IP for private network
 #  ----------------------------------------------------------------------------
 Vagrant.configure("2") do |config|
     config.vm.box = "wheezy64"
-    config.vm.box_url = "https://dl.dropboxusercontent.com/s/3jz559mjz2aw4gs/debian-wheezy-64-vanilla.box"
+    config.vm.box_url = "http://vagrant.krkn.be/debian-wheezy64.box"
 
     config.vm.hostname = host
     config.vm.network :private_network, ip: ip
@@ -30,6 +30,6 @@ Vagrant.configure("2") do |config|
     # Configure Virtualbox VM
     config.vm.provider "virtualbox" do |v|
         v.name = name.sub(/^(\w)/) {|s| s.capitalize}
-        v.gui = true
+        # v.gui = true
     end
 end

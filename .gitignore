@@ -8,3 +8,5 @@ bin
 
 static/js/*
 static/css/*
+
+_client
