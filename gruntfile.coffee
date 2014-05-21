@@ -12,8 +12,8 @@ module.exports = ( grunt ) ->
     grunt.initConfig
         bumpup: "package.json"
         clean:
-            server: [ "bin/server/" ]
-            client: [ "bin/client/" ]
+            server: [ "bin/" ]
+            client: [ "_client/" ]
         coffeelint:
             options:
                 arrow_spacing:
@@ -53,7 +53,7 @@ module.exports = ( grunt ) ->
                 expand: yes
                 cwd: "src/server/"
                 src: [ "**/*.coffee" ]
-                dest: "bin/server/"
+                dest: "bin/"
                 ext: ".js"
                 options:
                     bare: yes
@@ -61,7 +61,7 @@ module.exports = ( grunt ) ->
                 expand: yes
                 cwd: "src/client/"
                 src: [ "**/*.coffee" ]
-                dest: "bin/client/"
+                dest: "_client/"
                 ext: ".js"
                 options:
                     bare: yes
@@ -71,7 +71,7 @@ module.exports = ( grunt ) ->
                     expand: yes
                     cwd: "src/server/views/"
                     src: [ "**/*.jade" ]
-                    dest: "bin/server/views/"
+                    dest: "bin/views/"
                 ]
         browserify:
             libs:
@@ -83,7 +83,7 @@ module.exports = ( grunt ) ->
                 options:
                     external: aBrowserifyLibs
                 files:
-                    "static/js/app.js": "bin/client/app.js"
+                    "static/js/app.js": "_client/app.js"
         uglify:
             options:
                 sourceMap: yes # should be removed for production
@@ -106,7 +106,7 @@ module.exports = ( grunt ) ->
                 "adjoining-classes": no
                 "box-sizing": no
                 "text-indent": no
-                "fallback-colors": no # until stylus-lakansyel is completed
+                "fallback-colors": no # until kouto-swiss is completed
                 "font-faces": no
                 "regex-selectors": no
                 "universal-selector": no
@@ -127,7 +127,7 @@ module.exports = ( grunt ) ->
                     "static/css/styles.min.css": "static/css/styles.css"
         supervisor:
             server:
-                script: "bin/server/index.js"
+                script: "bin/index.js"
                 options:
                     watch: [ "bin" ]
                     extensions: [ "js", "jade" ]
