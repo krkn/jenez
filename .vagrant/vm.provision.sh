@@ -17,8 +17,8 @@ function echo_failure { echo -ne "\033[60G\033[0;39m[ \033[1;31mFAILED\033[0;39m
 function echo_warning { echo -ne "\033[60G\033[0;39m[ \033[1;33mWARNING\033[0;39m ]\n\r"; }
 function echo_exists  { echo -ne "\033[60G\033[0;39m[   \033[1;34mDONE\033[0;39m  ]\n\r"; }
 
-function process_end {    
-    if [[ $1 > 0 ]]; then 
+function process_end {
+    if [[ $1 > 0 ]]; then
         echo -en "${SEP}Error $1 : $2" ; echo_failure
     else
         ELAPSED_TIME=$(($SECONDS - $START_TIME))
@@ -58,7 +58,7 @@ test $(which apg) && echo_exists || ( apt-get install -yq apg >/dev/null 2>&1 &&
 echo -en "\t- Zip"
 test $(which zip) && echo_exists || ( apt-get install -yq zip unzip >/dev/null 2>&1 && echo_success || echo_failure )
 
-echo -en "\t- Git" 
+echo -en "\t- Git"
 test $(which git) && echo_exists || ( apt-get install -yq git >/dev/null 2>&1 && echo_success || echo_failure )
 
 # -----------------------------------------------------------------------------
@@ -120,7 +120,7 @@ tee -a /etc/avahi/services/afpd.service >/dev/null <<EOF
 </service-group>
 EOF
 
-/etc/init.d/avahi-daemon restart >/dev/null 2>&1 && 
+/etc/init.d/avahi-daemon restart >/dev/null 2>&1 &&
 echo_success || echo_failure
 
 # -----------------------------------------------------------------------------
@@ -130,11 +130,11 @@ echo -en "Install MongoDB\t"
 
 if [[ -z $(which mongo) ]]; then
     apt-get install -qq mongodb-org >/dev/null 2>&1
-    
-    if [[ -z $(which mongo) ]]; then 
+
+    if [[ -z $(which mongo) ]]; then
         echo_failure
     else
-        #/etc/init.d/mongod start  && 
+        #/etc/init.d/mongod start  &&
         mongo admin --eval "db.createUser( { user: \"admin\", pwd: \"admin\", roles: [ \"userAdmin\" ] } )" >/dev/null &&
         echo_success || echo_warning
     fi
@@ -171,11 +171,11 @@ if [[ -z $(which node) ]]; then
     apt-get -y update >/dev/null 2>&1 &&
     apt-get install -yqq nodejs >/dev/null 2>&1
 
-    if [[ $? -ne 0 ]]; then 
+    if [[ $? -ne 0 ]]; then
         process_end 1 "Unable to install Node"
     else
         npm install -g n --unsafe-perm >/dev/null 2>&1 &&
-        n stable && 
+        n stable >/dev/null 2>&1 &&
         echo_success || echo_failure
 
         # NPM Pack
@@ -183,13 +183,13 @@ if [[ -z $(which node) ]]; then
 
         echo -en "\t- grunt-cli\t"
         npm install -g grunt-cli --unsafe-perm >/dev/null 2>&1 && echo_success || echo_failure
-        
+
         echo -en "\t- nodemon\t"
         npm install -g nodemon --unsafe-perm >/dev/null 2>&1 && echo_success || echo_failure
-        
+
         echo -en "\t- bower\t"
         npm install -g bower --unsafe-perm >/dev/null 2>&1 && echo_success || echo_failure
-        
+
         echo -en "\t- browserify\t"
         npm install -g browserify --unsafe-perm >/dev/null 2>&1 && echo_success || echo_failure
     fi
@@ -208,9 +208,9 @@ if [[ ! -f /etc/nginx/nginx.conf ]]; then
     sed -i '/sendfile/s/on/off/' /etc/nginx/nginx.conf
     sed -i -e "/default_type/a\ \n\tclient_max_body_size 400M;" /etc/nginx/nginx.conf
 
-    /etc/init.d/nginx configtest >/dev/null 2>&1 && /etc/init.d/nginx restart >/dev/null 2>&1 && 
+    /etc/init.d/nginx configtest >/dev/null 2>&1 && /etc/init.d/nginx restart >/dev/null 2>&1 &&
     echo_success || process_end 1 "Unable to install of configure NginX"
-    
+
     # NginX VHost
     echo -en "\tVHost installation"
     pushd /etc/nginx/sites-available/ >/dev/null &&
@@ -251,7 +251,7 @@ if [[ ! -f /etc/nginx/nginx.conf ]]; then
 
     /etc/init.d/nginx configtest >/dev/null 2>&1 && /etc/init.d/nginx restart >/dev/null 2>&1 &&
     echo_success || echo_failure
-    
+
     popd >/dev/null
 else
     echo_exists
