@@ -11,7 +11,7 @@
 
 root = "#{ __dirname }/.."
 
-pkg = require "#{ root }/../../package.json"
+pkg = require "#{ root }/../package.json"
 
 express = require "express"
 bodyParser = require "body-parser"
