@@ -49,8 +49,8 @@
     "grunt": "~0.4",
     "grunt-contrib-csslint": "~0.2",
     "grunt-csso": "~0.6",
-    "browserify": "~4.0",
-    "grunt-browserify": "~2.0",
+    "browserify": "~4.1",
+    "grunt-browserify": "~2.1",
     "grunt-contrib-uglify": "~0.4",
     "grunt-ks-stylus": "~0.0"
   },
