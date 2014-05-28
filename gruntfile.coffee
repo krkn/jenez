@@ -20,6 +20,11 @@ module.exports = ( grunt ) ->
                     level: "error"
                 camel_case_classes:
                     level: "error"
+                colon_assignment_spacing:
+                    spacing:
+                        left: 0
+                        right: 1
+                    level: "error"
                 duplicate_key:
                     level: "error"
                 indentation:
