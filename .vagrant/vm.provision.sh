@@ -79,6 +79,8 @@ alias l='clear; ls -la'
 alias duh='du -hs'
 alias tree="find . | sed 's/[^/]*\//|   /g;s/| *\([^| ]\)/+--- \1/'"
 alias wget="wget -c"
+
+cd /vagrant
 EOF
 
 cp -f /root/.bashrc /home/vagrant/ && chown vagrant: /home/vagrant/.bashrc
@@ -278,7 +280,6 @@ if [ -n $PROJECT_NAME ]; then
     find ./src -type f -name "*.coffee" -print0 | xargs -0 sed -i "s/PROJECT_NAME/${PROJECT_NAME}/"
     find ./static -type f -name "*.styl" -print0 | xargs -0 sed -i "s/PROJECT_NAME/${PROJECT_NAME}/"
 fi
-
 
 # =============================================================================
 
