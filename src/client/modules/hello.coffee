@@ -9,6 +9,9 @@
 
 "use strict"
 
+glogger = ( require "glogger" )
+	level: "info"
+
 module.exports =
     world: ->
-        console.log "Hello, world !"
+        glogger.info "Hello, World !"

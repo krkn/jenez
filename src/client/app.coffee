@@ -10,10 +10,12 @@
 "use strict"
 
 $ = require "jquery"
+glogger = ( require "glogger" )
+	level: "info"
 
 hello = require "./modules/hello.js"
 
 $ ->
-    console.log "app. started"
+    glogger.info "app. started"
 
     hello.world()
